@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>All models</h2>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3">
+    <form id="f1" action="/add_classifier">
+      <label for=classifier"">Classifier</label>
+      <select name = "classifier" id ="classifier" style="width:100%;max-width:90%;" >
+        <option>
+          KNeighborsClassifier(3)
+        </option>
+        <option>
+          SVC(kernel="linear", C=0.025)
+        </option>
+        <option>
+          SVC(gamma=2, C=1)
+        </option>
+        <option>
+          GaussianProcessClassifier(1.0 * RBF(1.0))
+        </option>
+        <option>
+          LogisticRegression()
+        </option>
+        <option>
+          DecisionTreeClassifier(max_depth=5)
+        </option>
+        <option>
+          RidgeClassifier()
+        </option>
+        <option>
+          RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1)
+        </option>
+        <option>
+          MLPClassifier(alpha=1)
+        </option>
+        <option>
+          AdaBoostClassifier()
+        </option>
+        <option>
+          GaussianNB()
+        </option>
+        <option>
+          BernoulliNB()
+        </option>
+        <option>
+          QuadraticDiscriminantAnalysis()
+        </option>
+        <option>
+          LinearSVC()
+        </option>
+        <option>
+          MultinomialNB()
+        </option>
+        <option>
+          Perceptron()
+        </option>
+        <option>
+          PassiveAggressiveClassifier()
+        </option>
+        <option>
+          NearestCentroid()
+        </option>
+        <option>
+      </select>
+      <br>
+      <br>
+
+      <label for="ds_path">Data set</label>
+      <select name = "ds_path" id="ds_path" style ="width:100%;max-width:90%;">
+        <option>
+          ds.csv
+        </option>
+      </select>
+      <br>
+      <br>
+
+      <label for = "toarray">If the classfifer requires a dense array</label>
+      <select name = "toarray" id="toarray" style ="width:100%;max-width:90%;">
+        <option>
+          True
+        </option>
+        <option>
+          False
+        </option>
+      </select>
+      <br>
+      <br>
+
+      <label for = "clean_data">Clean data set</label>
+      <select name = "clean_data" id="clean_data" style ="width:100%;max-width:90%;">
+        <option>
+          True
+        </option>
+        <option>
+          False
+        </option>
+      </select>
+      <br>
+      <br>
+
+      <label for= "min_df">Minimum vocabulary occurences</label>
+      <input type ="number" name = "min_df" id="min_df" style ="width:100%;max-width:90%;" value="3">
+      <br>
+      <br>
+
+      <label for= "data_size">Data size</label>
+      <input type ="number" name = "data_size" id="data_size" style ="width:100%;max-width:90%;" value= "2000">
+      <br>
+      <br>
+
+      <label for="train_size">Train size</label>
+      <input type ="text" name = "train_size" id="train_size" style ="width:100%;max-width:90%;" value="0.8">
+      <br>
+      <br>
+
+      <label for="max_features">Max features</label>
+      <input type ="number" name = "max_features" id="max_features" style ="width:100%;max-width:90%;" value="10000">
+      <br>
+      <br>
+
+      <label for= "tfidf">TFIDF</label>
+      <br>
+      <select name = "tfidf" id="tfidf" style ="width:100%;max-width:90%;">
+        <option>
+          True
+        </option>
+        <option>
+          False
+        </option>
+      </select>
+      <br>
+      <br>
+
+      <label for="text_column">Text column</label>
+      <input type ="text" name = "text_column" id="text_column" style ="width:100%;max-width:90%;" value="5" >
+      <br>
+      <br>
+
+      <label for="category_column">Category column</label>
+      <input type ="text" name = "category_column" id="category_column" style ="width:100%;max-width:90%;" value="1" >
+      <br>
+      <br>
+
+      <label for="encoding">Encoding</label>
+      <input type ="text" name = "encoding" id="encoding" style ="width:100%;max-width:90%;" value="ISO-8859-1" >
+      <br>
+      <br>
+
+      <label for="index_col">Index column</label>
+      <input type ="text" name = "index_col" id="index_col" style ="width:100%;max-width:90%;" value="0" >
+      <br>
+      <br>
+
+      <label for="header">Header</label>
+      <input type ="text" name = "header" id="header" style ="width:100%;max-width:90%;" value="None" >
+      <br>
+      <br>
+
+      <button form="f1" type="submit" class="btn btn-default">Add</button>
+    </form>
+    </div>
+    <div class="col-sm-9">
+    {% if models|length != 0 %}
+    <table class="table table-hover">
+      <thead>
+        {%for key in models[0][1].keys() %}
+          <th>
+            {{key}}
+          </th>
+      {% endfor %}
+      <th>
+        Delete
+      </th>
+    </thead>
+    <tbody>
+        {%for row in models %}
+        <tr>
+          {%for value in row[1].values() %}
+          <td>
+            {{value}}
+          </td>
+          {% endfor %}
+          <td>
+            <a href="/delete_classifier?id={{row.0}}">Delete</a>
+          </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+</div>
+</div>
+{% endif %}
+{% endblock content %}

@@ -1,0 +1,349 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<br>
+<form class="form-inline my-2 my-lg-0" target="/compare">
+      <label for="tag">Compare up to three tokens separated by commas </label>
+      <input class="form-control mr-sm-2" type="text" placeholder="Search" name="tag" id="tag">
+      <button class="btn btn-secondary my-2 my-sm-0" type="submit">Compare</button>
+</form>
+<div class="container-fluid">
+    <div class="row">
+      <h1>{{tagA}}</h1>
+    </div>
+    <div class="row">
+      <div class="col-sm-4">
+        <canvas id="barsA" width="400" height="400"></canvas>
+      </div>
+      <div class="col-sm-4">
+        <canvas id="bars2A" width="400" height="400"></canvas>
+      </div>
+      <div class="col-sm-4">
+        <canvas id="pieA" width="400" height="400"></canvas>
+      </div>
+    </div>
+    <div class="row">
+      <h1>{{tagB}}</h1>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+          <canvas id="barsB" width="400" height="400"></canvas>
+        </div>
+        <div class="col-sm-4">
+          <canvas id="bars2B" width="400" height="400"></canvas>
+        </div>
+        <div class="col-sm-4">
+          <canvas id="pieB" width="400" height="400"></canvas>
+        </div>
+    </div>
+    <div class="row">
+      <h1>{{tagC}}</h1>
+    </div>
+    <div class="row">
+          <div class="col-sm-4">
+            <canvas id="barsC" width="400" height="400"></canvas>
+          </div>
+          <div class="col-sm-4">
+            <canvas id="bars2C" width="400" height="400"></canvas>
+          </div>
+
+          <div class="col-sm-4">
+            <canvas id="pieC" width="400" height="400"></canvas>
+          </div>
+      </div>
+</div>
+<script src="https://codepen.io/anon/pen/aWapBE.js"></script>
+
+<script>
+  var ctx = document.getElementById("barsA").getContext('2d');
+  var plt = palette('tol', parseInt({{dataA|length}}));
+
+  var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: {{labelsA}},
+          datasets: [
+              {% for i in range(0,dataA|length) %}
+              {
+              label: 'CL{{i}}',
+              data: {{dataA[i]}},
+              backgroundColor: "#"+plt[{{i}}]
+          }
+          {% if i < dataA|length -1 %}
+          {{','}}
+          {% endif %}
+          {% endfor %}
+        ]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero:true
+                  }
+              }]
+          },
+          title: {
+              display: true,
+              text: 'Tweets sentiment, 1 is negative, 5 is positive.'
+          }
+      }
+  });
+</script>
+<script>
+  var ctx = document.getElementById("barsB").getContext('2d');
+  var plt = palette('tol', parseInt({{dataB|length}}));
+
+  var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: {{labelsB}},
+          datasets: [
+              {% for i in range(0,dataB|length) %}
+              {
+              label: 'CL{{i}}',
+              data: {{dataB[i]}},
+              backgroundColor: "#"+plt[{{i}}]
+          }
+          {% if i < dataB|length -1 %}
+          {{','}}
+          {% endif %}
+          {% endfor %}
+        ]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero:true
+                  }
+              }]
+          },
+          title: {
+              display: true,
+              text: 'Tweets sentiment, 1 is negative, 5 is positive.'
+          }
+      }
+  });
+</script>
+<script>
+  var ctx = document.getElementById("barsC").getContext('2d');
+  var plt = palette('tol', parseInt({{dataC|length}}));
+
+  var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: {{labelsC}},
+          datasets: [
+              {% for i in range(0,dataC|length) %}
+              {
+              label: 'CL{{i}}',
+              data: {{dataC[i]}},
+              backgroundColor: "#"+plt[{{i}}]
+          }
+          {% if i < dataC|length -1 %}
+          {{','}}
+          {% endif %}
+          {% endfor %}
+        ]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero:true
+                  }
+              }]
+          },
+          title: {
+              display: true,
+              text: 'Tweets sentiment, 1 is negative, 5 is positive.'
+          }
+      }
+  });
+</script>
+
+<script>
+  var ctx = document.getElementById("bars2A").getContext('2d');
+  var plt = palette('tol', parseInt({{avgsA|length}}));
+
+  var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: {{labelsA}},
+          datasets: [
+              {
+              label: 'Negative',
+              data: {{avgsA[0]}},
+              backgroundColor: "#"+plt[0]
+          },
+          {
+          label: 'Positive',
+          data: {{avgsA[1]}},
+          backgroundColor: "#"+plt[1]
+      }
+        ]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero:true
+                  }
+              }]
+          },
+          title: {
+              display: true,
+              text: 'Tweets last scroe based on our formula for average accuracy'
+          }
+      }
+  });
+</script>
+<script>
+  var ctx = document.getElementById("bars2B").getContext('2d');
+  var plt = palette('tol', parseInt({{avgsB|length}}));
+
+  var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: {{labelsB}},
+          datasets: [
+              {
+              label: 'Negative',
+              data: {{avgsB[0]}},
+              backgroundColor: "#"+plt[0]
+          },
+          {
+          label: 'Positive',
+          data: {{avgsB[1]}},
+          backgroundColor: "#"+plt[1]
+      }
+        ]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero:true
+                  }
+              }]
+          },
+          title: {
+              display: true,
+              text: 'Tweets last scroe based on our formula for average accuracy'
+          }
+      }
+  });
+</script>
+<script>
+  var ctx = document.getElementById("bars2C").getContext('2d');
+  var plt = palette('tol', parseInt({{avgsC|length}}));
+
+  var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: {{labelsC}},
+          datasets: [
+              {
+              label: 'Negative',
+              data: {{avgsC[0]}},
+              backgroundColor: "#"+plt[0]
+          },
+          {
+          label: 'Positive',
+          data: {{avgsC[1]}},
+          backgroundColor: "#"+plt[1]
+      }
+        ]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero:true
+                  }
+              }]
+          },
+          title: {
+              display: true,
+              text: 'Tweets last scroe based on our formula for average accuracy'
+          }
+      }
+  });
+</script>
+
+<script>
+  var ctx = document.getElementById("pieA").getContext('2d');
+  var myChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+          labels: ['Negative','Positive','Neutral'],
+          datasets: [
+              {
+              data: {{sentsA}},
+              backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)']
+            }
+        ]
+      },
+      options: {
+          title: {
+              display: true,
+              text: 'Overal Sentiment score'
+          }
+      }
+  });
+</script>
+<script>
+  var ctx = document.getElementById("pieB").getContext('2d');
+  var myChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+          labels: ['Negative','Positive','Neutral'],
+          datasets: [
+              {
+              data: {{sentsB}},
+              backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)']
+            }
+        ]
+      },
+      options: {
+          title: {
+              display: true,
+              text: 'Overal Sentiment score'
+          }
+      }
+  });
+</script>
+<script>
+  var ctx = document.getElementById("pieC").getContext('2d');
+  var myChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+          labels: ['Negative','Positive','Neutral'],
+          datasets: [
+              {
+              data: {{sentsC}},
+              backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)']
+            }
+        ]
+      },
+      options: {
+          title: {
+              display: true,
+              text: 'Overal Sentiment score'
+          }
+      }
+  });
+</script>
+
+{% endblock content %}

@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<br>
+<form class="form-inline my-2 my-lg-0" target="/tweets">
+      <input class="form-control mr-sm-2" type="text" placeholder="Search" name="tag" id="tag">
+      <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+    </form>
+{% if result|length >0 %}
+<br>
+<h1>Tweets</h1>
+<table class="table table-hover">
+  <thead>
+    <th>
+      N
+    </th>
+    <th>
+      Tweet
+    </th>
+  </thead>
+  <tbody>
+    {% for i in range(0, result|length) %}
+    <tr>
+      <td>
+        {{i+1}}
+      </td>
+      <td>
+        {{result[i][0]}}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+
+</table>
+
+{% if result[0][1]|length >0 %}
+<br>
+<h1>Classification</h1>
+<table class="table table-hover">
+  <thead>
+    <th>
+
+    </th>
+    {% for i in range(0, result|length) %}
+    <th>
+        {{i+1}}
+    </th>
+    {% endfor %}
+  </thead>
+  <tbody>
+    {% for i in range(0, result[0][1]|length) %}
+    <tr>
+      <td>
+        {{ result[0][1][i][0] }}
+      </td>
+      {% for j in range(0, result|length) %}
+      <td>
+        {{ 'Negative' if result[j][1][i][1] == 0 else 'Positive' }}
+      </td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+
+</table>
+
+<h1>Graphs</h1>
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-sm-4">
+        <canvas id="bars" width="400" height="400"></canvas>
+      </div>
+      <div class="col-sm-4">
+        <canvas id="bars2" width="400" height="400"></canvas>
+      </div>
+
+      <div class="col-sm-4">
+        <canvas id="pie" width="400" height="400"></canvas>
+      </div>
+    </div>
+</div>
+<script src="https://codepen.io/anon/pen/aWapBE.js"></script>
+<script>
+var ctx = document.getElementById("bars").getContext('2d');
+var plt = palette('tol', parseInt({{data|length}}));
+
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: {{labels}},
+        datasets: [
+            {% for i in range(0,data|length) %}
+            {
+            label: 'CL{{i}}',
+            data: {{data[i]}},
+            backgroundColor: "#"+plt[{{i}}]
+        }
+        {% if i < data|length -1 %}
+        {{','}}
+        {% endif %}
+        {% endfor %}
+      ]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        },
+        title: {
+            display: true,
+            text: 'Tweets sentiment, 1 is negative, 5 is positive.'
+        }
+    }
+});
+</script>
+
+<script>
+var ctx = document.getElementById("bars2").getContext('2d');
+var plt = palette('tol', parseInt({{avgs|length}}));
+
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: {{labels}},
+        datasets: [
+            {
+            label: 'Negative',
+            data: {{avgs[0]}},
+            backgroundColor: "#"+plt[0]
+        },
+        {
+        label: 'Positive',
+        data: {{avgs[1]}},
+        backgroundColor: "#"+plt[1]
+    }
+      ]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        },
+        title: {
+            display: true,
+            text: 'Tweets last scroe based on our formula for average accuracy'
+        }
+    }
+});
+</script>
+
+<script>
+var ctx = document.getElementById("pie").getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: ['Negative','Positive','Neutral'],
+        datasets: [
+            {
+            data: {{sents}},
+            backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(255, 206, 86, 0.2)']
+          }
+      ]
+    },
+    options: {
+        title: {
+            display: true,
+            text: 'Overal Sentiment score'
+        }
+    }
+});
+</script>
+{% endif %}
+{% endif %}
+{% endblock content %}
