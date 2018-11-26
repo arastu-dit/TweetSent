@@ -1,5 +1,5 @@
 nltk==3.2.5
-Django==2.1
+Django==2.1.2
 tweepy==3.6.0
 pandas==0.20.2
 scikit_learn==0.19.2
